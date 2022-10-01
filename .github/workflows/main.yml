@@ -1,0 +1,30 @@
+name: main
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GIST_ID: 715c62717519f634185af0ebde234992
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run test:ci
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+      - run: rm -rf test/data
+      - uses: ./
+        with:
+          gist-id: ${{ env.GIST_ID }}
+          token: ${{ secrets.GIST_TOKEN }}

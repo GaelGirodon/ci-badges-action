@@ -1,0 +1,2 @@
+extension: ['test.js']
+recursive: true

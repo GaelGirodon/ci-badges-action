@@ -1,0 +1,22 @@
+name: check-release
+
+on:
+  push:
+    branches:
+      - release
+
+env:
+  GIST_ID: 715c62717519f634185af0ebde234992
+
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: gaelgirodon/ci-badges-action@v0
+        with:
+          gist-id: ${{ env.GIST_ID }}
+          token: ${{ secrets.GIST_TOKEN }}
+          prefix: repo
+          ref: true

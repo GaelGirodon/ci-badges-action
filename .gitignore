@@ -1,0 +1,14 @@
+#
+# .gitignore
+#
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Project
+node_modules/
+dist/
+coverage/
+test-results.xml

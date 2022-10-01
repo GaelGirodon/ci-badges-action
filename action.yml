@@ -1,0 +1,18 @@
+name: CI Badges
+description: Badges for test results and code coverage
+inputs:
+  gist-id:
+    description: The unique identifier of the Gist.
+    required: true
+  token:
+    description: GitHub REST API access token.
+    required: true
+  prefix:
+    description: 'Filenames prefix (default: repository name).'
+    default: '$GITHUB_REPOSITORY_NAME'
+  ref:
+    description: Include the short ref name (branch or tag) in filenames.
+    default: 'false'
+runs:
+  using: node16
+  main: index.js

@@ -1,0 +1,9 @@
+=== RUN   Test
+=== RUN   Test/example/1
+=== RUN   Test/example/2
+--- PASS: Test (0.01s)
+    --- PASS: Test/example/1 (0.00s)
+    --- PASS: Test/example/2 (0.01s)
+PASS
+coverage: 96.5% of statements in ./...
+ok  	github.com/example/test	0.111s	coverage: 96.5% of statements in ./...
