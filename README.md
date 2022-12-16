@@ -2,7 +2,7 @@
 
 ![version](https://img.shields.io/github/package-json/v/gaelgirodon/ci-badges-action?style=flat-square)
 ![license](https://img.shields.io/github/license/gaelgirodon/ci-badges-action?style=flat-square)
-![build](https://img.shields.io/github/workflow/status/gaelgirodon/ci-badges-action/main?style=flat-square)
+![build](https://img.shields.io/github/actions/workflow/status/gaelgirodon/ci-badges-action/main.yml?branch=main&style=flat-square)
 ![tests](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Fci-badges-action-junit-tests.json)
 ![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Fci-badges-action-cobertura-coverage.json)
 
