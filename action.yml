@@ -1,5 +1,8 @@
 name: CI Badges
 description: Badges for test results and code coverage
+branding:
+  icon: award
+  color: gray-dark
 inputs:
   gist-id:
     description: The unique identifier of the Gist.

@@ -25,7 +25,7 @@ export function buildBadge(report) {
     name = `${ref}-${name}`;
   }
   let prefix = core.getInput('prefix');
-  if (prefix === "$GITHUB_REPOSITORY_NAME") {
+  if (prefix === '$GITHUB_REPOSITORY_NAME') {
     prefix = (process.env.GITHUB_REPOSITORY || '/').split('/')[1];
   }
   if (prefix) {

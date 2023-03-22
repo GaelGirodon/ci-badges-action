@@ -7,17 +7,19 @@
 ![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Fci-badges-action-cobertura-coverage.json)
 
 This action generates badges (as JSON files) from Go, JUnit, Cobertura and
-JaCoCo test and coverage reports and upload them to a Gist to make them
-available to Shields through the endpoint feature with (almost) zero
-configuration.
+JaCoCo test and coverage reports (most test runners and code coverage tools,
+including Mocha, Jest, PHPUnit, c8, Istanbul/nyc, and more, support at least
+one of these formats) and upload them to a Gist to make them available to
+Shields through the endpoint feature with (almost) zero configuration.
 
 ## Usage
 
-Create a Gist and an access token (with the `gist` scope) and store the access
-token in your repository secrets.
+Create a [Gist](https://gist.github.com) and an
+[access token](https://github.com/settings/tokens) (with the `gist` scope)
+and store the access token in your repository secrets.
 
-Add the action to your workflow (after running tests, as reports must be
-available in the current working directory):
+Add the action to your [workflow](./.github/workflows/main.yml#L27-L30) (after
+running tests, as reports must be available in the current working directory):
 
 ```yaml
 uses: gaelgirodon/ci-badges-action@v1
@@ -26,8 +28,8 @@ with:
   token: ${{ secrets.GIST_TOKEN }}
 ```
 
-Each generated badge JSON file is uploaded to your Gist and is available
-via: `https://gist.githubusercontent.com/{user}/{gist-id}/raw/{repo}-[{ref}-]{format}-{type}.json`,
+Each generated badge JSON file is uploaded to your Gist and is available via:
+`https://gist.githubusercontent.com/{user}/{gist-id}/raw/{repo}-[{ref}-]{format}-{type}.json`,
 e.g. `.../myproject-cobertura-coverage.json`.
 
 This URL can be used with [Shields Endpoint](https://shields.io/endpoint)
@@ -105,6 +107,13 @@ Write the test report to a file matching:
 - `**/*test*.xml`
 - `**/*junit*.xml`
 
+This is the default format and location with JUnit, but most test runners
+support this format too, natively or using an additional reporter, e.g.:
+
+- **Mocha**: `mocha --reporter mocha-junit-reporter`
+- **Jest**: `jest --reporters="jest-junit"`
+- **PHPUnit**: `phpunit --log-junit report.xml`
+
 The number of tests and failures will be extracted from the `<testsuites>` tag.
 
 ➡️ `{repo}-[{ref}-]junit-tests.json`
@@ -115,6 +124,13 @@ Write the coverage report to a file matching:
 
 - `**/*cobertura*.xml`
 - `**/*coverage*.xml`
+
+This is the default format and location with Cobertura, but most code coverage
+tools support this format too, natively or using an additional reporter, e.g.:
+
+- **c8**: `c8 --reporter cobertura [...]`
+- **nyc**: `nyc --reporter cobertura [...]`
+- **PHPUnit**: `phpunit --coverage-cobertura coverage.xml`
 
 The coverage will be extracted from the `line-rate` attribute of the
 `<coverage>` tag.
@@ -128,9 +144,24 @@ Write the coverage report to a file matching:
 - `**/*jacoco*.xml`
 - `**/*coverage*.xml`
 
+This is the default format and location with JaCoCo, but some code coverage
+tools may support this format too.
+
 The coverage will be extracted from the last `<counter>` tag with type `LINE`.
 
 ➡️ `{repo}-[{ref}-]jacoco-coverage.json`
+
+## Notes
+
+Storing badge JSON files on a Gist may seem tedious, but:
+
+- An intermediate storage solution is required until GitHub Actions supports
+  publishing test and coverage data natively (as GitLab CI and Azure Pipelines
+  do);
+- Storing generated files next to the source code in the Git repository (even
+  on another branch) might seem like a bad practice for some people;
+- Generating JSON files instead of SVG files allows for better SoC (Separation
+  of Concerns) and therefore easier customization using Shields features.
 
 ## License
 
