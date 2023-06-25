@@ -32,7 +32,7 @@ Each generated badge JSON file is uploaded to your Gist and is available via:
 `https://gist.githubusercontent.com/{user}/{gist-id}/raw/{repo}-[{ref}-]{format}-{type}.json`,
 e.g. `.../myproject-cobertura-coverage.json`.
 
-This URL can be used with [Shields Endpoint](https://shields.io/endpoint)
+This URL can be used with [Shields Endpoint](https://shields.io/badges/endpoint-badge)
 to generate the badge SVG image: `https://img.shields.io/endpoint?url={url}`.
 The usual query parameters (`style`, `label`, ...) can be used to further
 customize the badge.
