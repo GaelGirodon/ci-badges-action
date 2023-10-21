@@ -17,5 +17,5 @@ inputs:
     description: Include the short ref name (branch or tag) in filenames.
     default: 'false'
 runs:
-  using: node16
+  using: node20
   main: index.js
