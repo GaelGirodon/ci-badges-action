@@ -7,7 +7,7 @@ export async function main() {
   try {
     const badges = (await getReports())
       .map(b => buildBadge(b));
-    gist.update(badges);
+    await gist.update(badges);
   } catch (error) {
     core.warning(`An error occurred: ${error.message}`);
   }

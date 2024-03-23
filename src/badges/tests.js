@@ -9,6 +9,6 @@ export function buildBadge(data) {
   if (data.failed > 0) {
     content.message += `, ${data.failed} failed`;
   }
-  content.color = data.failed == 0 ? 'brightgreen' : 'red';
+  content.color = data.failed === 0 ? 'brightgreen' : 'red';
   return content;
 }
