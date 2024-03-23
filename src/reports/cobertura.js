@@ -21,7 +21,7 @@ export async function getReports(root) {
     const report = await fs.readFile(r, { encoding: 'utf8' });
     const coverageMatches = report
       .match(/(?<=<coverage[^>]+line-rate=")[0-9.]+(?=")/);
-    if (coverageMatches?.length != 1) {
+    if (coverageMatches?.length !== 1) {
       core.info('Report is not a valid Cobertura report');
       continue; // Invalid report file, trying the next one
     }

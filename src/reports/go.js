@@ -11,7 +11,7 @@ import { globNearest } from '../util/index.js';
 export async function getReports(root) {
   core.info('Load Go tests and coverage report');
   const goMods = await globNearest([join(root, '**/go.mod')]);
-  if (goMods.length == 0) {
+  if (goMods.length === 0) {
     core.info('go.mod file not found, skipping');
     return [];
   }
@@ -24,7 +24,7 @@ export async function getReports(root) {
     core.info(`Load Go report '${r}'`);
     const report = await fs.readFile(r, { encoding: 'utf8' });
     const tests = (report.match(/=== RUN/g) || []).length;
-    if (tests == 0) {
+    if (tests === 0) {
       continue; // Invalid report file, trying the next one
     }
     const passed = (report.match(/--- PASS/g) || []).length;

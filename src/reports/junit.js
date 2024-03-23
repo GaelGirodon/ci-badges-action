@@ -25,7 +25,7 @@ export async function getReports(root) {
       .match(/(?<=<testsuites[^>]+tests=")[0-9]+(?=")/);
     const failedMatches = report
       .match(/(?<=<testsuites[^>]+failures=")[0-9]+(?=")/);
-    if (testsMatches?.length != 1 || failedMatches?.length != 1) {
+    if (testsMatches?.length !== 1 || failedMatches?.length !== 1) {
       core.info('Report is not a valid JUnit report');
       continue; // Invalid report file, trying the next one
     }
