@@ -1,6 +1,6 @@
 {
   "name": "ci-badges-action",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Badges for test results and code coverage",
   "private": true,
   "main": "index.js",
