@@ -21,18 +21,19 @@ export async function getReports(root) {
   for (const r of reports) {
     core.info(`Load JUnit report '${r}'`);
     const report = await fs.readFile(r, { encoding: 'utf8' });
-    const testsMatches = report
-      .match(/(?<=<testsuites[^>]+tests=")[0-9]+(?=")/);
-    const failedMatches = report
-      .match(/(?<=<testsuites[^>]+failures=")[0-9]+(?=")/);
-    if (testsMatches?.length !== 1 || failedMatches?.length !== 1) {
+    const testSuites = report.match(/<testsuite[^s]([^>]+)>/g);
+    if (!testSuites) {
       core.info('Report is not a valid JUnit report');
       continue; // Invalid report file, trying the next one
     }
-    const tests = parseInt(testsMatches[0]);
-    const failed = parseInt(failedMatches[0]);
-    const passed = tests - failed;
-    badges.push({ type: 'tests', data: { passed, failed, tests } })
+    const data = { passed: 0, failed: 0, tests: 0 };
+    for (const ts of testSuites) {
+      data.failed += parseInt(ts.match(/failures="([0-9]+)"/)?.[1] ?? "0");
+      data.failed += parseInt(ts.match(/errors="([0-9]+)"/)?.[1] ?? "0");
+      data.tests += parseInt(ts.match(/tests="([0-9]+)"/)?.[1] ?? "0");
+    }
+    data.passed = data.tests - data.failed;
+    badges.push({ type: 'tests', data })
     break; // Successfully loaded a report file, can return now
   }
   core.info(`Loaded ${badges.length} JUnit report(s)`);

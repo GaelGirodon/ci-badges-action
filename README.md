@@ -114,7 +114,7 @@ support this format too, natively or using an additional reporter, e.g.:
 - **Jest**: `jest --reporters="jest-junit"`
 - **PHPUnit**: `phpunit --log-junit report.xml`
 
-The number of tests and failures will be extracted from the `<testsuites>` tag.
+The number of tests and failures will be extracted from `<testsuite>` tags.
 
 ➡️ `{repo}-[{ref}-]junit-tests.json`
 
