@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "ncc build index.js",
-    "lint": "eslint \"**/*.js\" --ignore-path \".gitignore\"",
+    "lint": "eslint",
     "test": "mocha src",
     "test:e2e": "mocha test",
     "test:ci": "c8 --reporter=cobertura --all --include \"src/**/*.js\" mocha --reporter mocha-junit-reporter src test || exit 0"
@@ -36,9 +36,11 @@
     "@actions/glob": "^0.4.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.3.0",
     "@vercel/ncc": "^0.38.1",
     "c8": "^9.1.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.3.0",
+    "globals": "^15.3.0",
     "mocha": "^10.4.0",
     "mocha-junit-reporter": "^2.2.1"
   }

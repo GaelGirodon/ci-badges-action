@@ -19,6 +19,7 @@ git tag -a "$version" -m "$version"
 # Release vX.Y.Z with dist/ folder on the release branch
 git switch release
 rm -rf ./dist
+git rm -r .
 git checkout main -- .
 npm run build
 sed -i '0,/index.js/s//dist\/index.js/' action.yml package.json

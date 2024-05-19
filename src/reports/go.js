@@ -29,7 +29,7 @@ export async function getReports(root) {
     }
     const passed = (report.match(/--- PASS/g) || []).length;
     const failed = (report.match(/--- FAIL/g) || []).length;
-    badges.push({ type: 'tests', data: { passed, failed, tests } })
+    badges.push({ type: 'tests', data: { passed, failed, tests } });
     const percentages = report.match(/(?<=\s)[0-9.]+(?=%)/g);
     if (percentages && percentages.length >= 1) {
       const coverage = parseFloat(percentages.slice(-1)[0]);

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Suites that should be excluded" time="9.999" tests="99" failures="19" errors="9">
+  <testsuite name="Ignore this" tests="99" time="9.999" failures="19" errors="9">
+  </testsuite>
+</testsuites>
