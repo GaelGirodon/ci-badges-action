@@ -30,6 +30,6 @@ export async function getReports() {
       core.warning(`Skipping ${id} report format: ${error}`);
     }
   }
-  core.info(`Loaded ${all.length} reports`);
+  core.info(`Loaded ${all.length} report(s)`);
   return all;
 }

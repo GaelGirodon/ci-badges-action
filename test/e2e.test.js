@@ -1,12 +1,12 @@
-import assert from 'assert';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+import assert from 'assert/strict';
 import { main } from '../src/index.js';
 
 describe('CI Badges action', function () {
   this.timeout(10000);
-  describe('#main()', function () {
-    it('should work end-to-end', async function () {
+  describe('#main()', () => {
+    it('should work end-to-end', async () => {
       // Set inputs
       process.env['INPUT_GIST-ID'] = process.env.GIST_ID;
       process.env['INPUT_TOKEN'] = process.env.GIST_TOKEN;
@@ -24,7 +24,7 @@ describe('CI Badges action', function () {
       // Check update date
       const updatedAt = new Date(response.data.updated_at).getTime();
       const now = new Date().getTime();
-      assert.ok((now - updatedAt) / 1000 < 10)
+      assert.ok((now - updatedAt) / 1000 < 10);
       // Check uploaded files
       const files = Object.keys(response.data.files);
       [

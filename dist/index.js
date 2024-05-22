@@ -33442,17 +33442,31 @@ var glob = __nccwpck_require__(8090);
 
 
 /**
- * Returns files and directories matching the glob patterns,
- * sorted by the nearest.
+ * Returns files matching the glob patterns, sorted by ascending depth
+ * and name, excluding some common unwanted directories from the search.
  * @param {string[]} patterns Glob patterns
- * @return {Promise<string[]>} Files sorted by the nearest.
+ * @return {Promise<string[]>} Files sorted by the nearest
  */
 async function globNearest(patterns) {
-  const globber = await glob.create(patterns.join('\n'));
+  const safePatterns = [
+    ...patterns,
+    '!**/.git/**',
+    '!**/.idea/**',
+    '!**/.vscode/**',
+    '!**/node_modules/**',
+    '!**/vendor/**'
+  ];
+  const globber = await glob.create(safePatterns.join('\n'), {
+    followSymbolicLinks: false,
+    implicitDescendants: false,
+    matchDirectories: false
+  });
   const files = await globber.glob();
   return files.sort((a, b) => {
-    return (a.match(/[\\/]/g)?.length ?? 0) - (b.match(/[\\/]/g)?.length ?? 0);
-  })
+    const depthDiff = (a.match(/[\\/]/g)?.length ?? 0)
+      - (b.match(/[\\/]/g)?.length ?? 0);
+    return depthDiff !== 0 ? depthDiff : a.localeCompare(b);
+  });
 }
 
 ;// CONCATENATED MODULE: ./src/reports/go.js
@@ -33487,7 +33501,7 @@ async function getReports(root) {
     }
     const passed = (report.match(/--- PASS/g) || []).length;
     const failed = (report.match(/--- FAIL/g) || []).length;
-    badges.push({ type: 'tests', data: { passed, failed, tests } })
+    badges.push({ type: 'tests', data: { passed, failed, tests } });
     const percentages = report.match(/(?<=\s)[0-9.]+(?=%)/g);
     if (percentages && percentages.length >= 1) {
       const coverage = parseFloat(percentages.slice(-1)[0]);
@@ -33513,33 +33527,57 @@ async function getReports(root) {
 async function junit_getReports(root) {
   core.info('Load JUnit tests report');
   const patterns = [
+    (0,external_path_.join)(root, '**/TEST-*.xml'),
     (0,external_path_.join)(root, '**/report.xml'),
-    (0,external_path_.join)(root, '**/*TEST*.xml'),
     (0,external_path_.join)(root, '**/*test*.xml'),
     (0,external_path_.join)(root, '**/*junit*.xml')
   ];
   const reports = await globNearest(patterns);
-  const badges = [];
+  const data = { passed: 0, failed: 0, tests: 0 };
+  let count = 0;
   for (const r of reports) {
     core.info(`Load JUnit report '${r}'`);
-    const report = await external_fs_.promises.readFile(r, { encoding: 'utf8' });
-    const testSuites = report.match(/<testsuite[^s]([^>]+)>/g);
-    if (!testSuites) {
+    const testSuites = await getTestSuiteTags(r);
+    if (testSuites.length === 0) {
       core.info('Report is not a valid JUnit report');
       continue; // Invalid report file, trying the next one
     }
-    const data = { passed: 0, failed: 0, tests: 0 };
     for (const ts of testSuites) {
-      data.failed += parseInt(ts.match(/failures="([0-9]+)"/)?.[1] ?? "0");
-      data.failed += parseInt(ts.match(/errors="([0-9]+)"/)?.[1] ?? "0");
-      data.tests += parseInt(ts.match(/tests="([0-9]+)"/)?.[1] ?? "0");
+      data.failed += parseInt(ts.match(/failures="([0-9]+)"/)?.[1] ?? '0');
+      data.failed += parseInt(ts.match(/errors="([0-9]+)"/)?.[1] ?? '0');
+      data.tests += parseInt(ts.match(/tests="([0-9]+)"/)?.[1] ?? '0');
     }
-    data.passed = data.tests - data.failed;
-    badges.push({ type: 'tests', data })
-    break; // Successfully loaded a report file, can return now
+    count++;
   }
-  core.info(`Loaded ${badges.length} JUnit report(s)`);
-  return badges;
+  data.passed = data.tests - data.failed;
+  core.info(`Loaded ${count} JUnit report(s)`);
+  return [{ type: 'tests', data }];
+}
+
+/**
+ * Extract top-level `<testsuite>` opening tags from the given JUnit test
+ * report file. Some test runners output nested `<testsuite>` tags (e.g.
+ * Node.js test runner), these nested tags must be ignored as values are
+ * aggregated in top-level ones.
+ * @param {string} path Path to the JUnit test report file
+ * @returns {Promise<string[]>} Top-level `<testsuite>` opening tags
+ */
+async function getTestSuiteTags(path) {
+  const testSuites = [];
+  let depth = 0;
+  const report = await external_fs_.promises.readFile(path, { encoding: 'utf8' });
+  const tags = report.match(/<\/?testsuite(?:[^s>][^>]+|\s*)>/g) ?? [];
+  for (const tag of tags) {
+    if (tag.startsWith('</')) {
+      depth--;
+    } else {
+      if (depth === 0) {
+        testSuites.push(tag);
+      }
+      depth++;
+    }
+  }
+  return testSuites;
 }
 
 ;// CONCATENATED MODULE: ./src/reports/cobertura.js
@@ -33651,7 +33689,7 @@ async function reports_getReports() {
       core.warning(`Skipping ${id} report format: ${error}`);
     }
   }
-  core.info(`Loaded ${all.length} reports`);
+  core.info(`Loaded ${all.length} report(s)`);
   return all;
 }
 

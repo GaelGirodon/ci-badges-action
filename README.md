@@ -86,7 +86,7 @@ Only matched report formats will get a file uploaded to the Gist.
 
 ### Go
 
-Write the verbose test output (`>` or `tee`) with coverage enabled to a
+Write the verbose test output (`>` or `tee`) with coverage enabled to a single
 `test*.{out,txt}` file next to the `go.mod` file:
 
 - `RUN`, `PASS` and `FAIL` flags will be used to count tests
@@ -100,21 +100,26 @@ sure the last percentage is the global coverage value.
 
 ### JUnit
 
-Write the test report to a file matching:
+Write test report(s) to file(s) matching:
 
+- `**/TEST-*.xml`
 - `**/report.xml`
-- `**/*TEST*.xml`
 - `**/*test*.xml`
 - `**/*junit*.xml`
 
 This is the default format and location with JUnit, but most test runners
-support this format too, natively or using an additional reporter, e.g.:
+support this format too, natively or using an additional reporter:
 
-- **Mocha**: `mocha --reporter mocha-junit-reporter`
-- **Jest**: `jest --reporters="jest-junit"`
+- **Maven**: `mvn test` → `target/{surefire,failsafe}-reports/TEST-*.xml`
+- **Gradle**: `gradle test` → `build/test-results/test/**/TEST-*.xml`
+- **Node.js**: `node --test --test-reporter=junit --test-reporter-destination=report.xml`
+- **Mocha**: `mocha --reporter mocha-junit-reporter` → `test-results.xml`
+- **Jest**: `jest --reporters="jest-junit"` → `junit.xml`
+- **Deno**: `deno test --junit-path=report.xml`
 - **PHPUnit**: `phpunit --log-junit report.xml`
 
-The number of tests and failures will be extracted from `<testsuite>` tags.
+The number of tests and failures will be extracted from top-level `<testsuite>`
+tags, from all matching and valid report files.
 
 ➡️ `{repo}-[{ref}-]junit-tests.json`
 
@@ -126,14 +131,14 @@ Write the coverage report to a file matching:
 - `**/*coverage*.xml`
 
 This is the default format and location with Cobertura, but most code coverage
-tools support this format too, natively or using an additional reporter, e.g.:
+tools support this format too, natively or using an additional reporter:
 
-- **c8**: `c8 --reporter cobertura [...]`
-- **nyc**: `nyc --reporter cobertura [...]`
+- **c8**: `c8 --reporter cobertura [...]` → `coverage/cobertura-coverage.xml`
+- **nyc**: `nyc --reporter cobertura [...]` → `coverage/cobertura-coverage.xml`
 - **PHPUnit**: `phpunit --coverage-cobertura coverage.xml`
 
 The coverage will be extracted from the `line-rate` attribute of the
-`<coverage>` tag.
+`<coverage>` tag, from the first matching and valid report file.
 
 ➡️ `{repo}-[{ref}-]cobertura-coverage.json`
 
@@ -147,7 +152,8 @@ Write the coverage report to a file matching:
 This is the default format and location with JaCoCo, but some code coverage
 tools may support this format too.
 
-The coverage will be extracted from the last `<counter>` tag with type `LINE`.
+The coverage will be extracted from the last `<counter>` tag with type `LINE`,
+from the first matching and valid report file.
 
 ➡️ `{repo}-[{ref}-]jacoco-coverage.json`
 
