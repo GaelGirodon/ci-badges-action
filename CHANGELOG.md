@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.4.0 - 2024-05-22
+
+- Improve JUnit reports loading
+  - Refine file patterns
+  - Load all reports instead of only the first one
+  - Read only top-level `<testsuite>` tags
+- Improve documentation
+- Update dependencies
+
 ## 1.3.0 - 2024-04-27
 
 - Improve JUnit report format support
