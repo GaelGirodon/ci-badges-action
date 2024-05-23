@@ -57,8 +57,8 @@ advantage of Shields customization features (through the query string).
 ![tests](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Frepo-go-tests.json)
 ![tests](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Frepo-junit-tests.json)
 
-This badge displays the number of passed and failed tests extracted from a test
-report.
+This badge displays the number of passed, failed and skipped tests extracted
+from test report(s).
 
 ```json
 {"schemaVersion":1,"label":"tests","message":"3 passed","color":"brightgreen"}
@@ -89,7 +89,7 @@ Only matched report formats will get a file uploaded to the Gist.
 Write the verbose test output (`>` or `tee`) with coverage enabled to a single
 `test*.{out,txt}` file next to the `go.mod` file:
 
-- `RUN`, `PASS` and `FAIL` flags will be used to count tests
+- `RUN`, `PASS`, `FAIL` and `SKIP` flags will be used to count tests
 - The last percentage will be used as the coverage value
 
 `go tool cover -func=cover.out` output may be appended to the above file to make
@@ -118,8 +118,8 @@ support this format too, natively or using an additional reporter:
 - **Deno**: `deno test --junit-path=report.xml`
 - **PHPUnit**: `phpunit --log-junit report.xml`
 
-The number of tests and failures will be extracted from top-level `<testsuite>`
-tags, from all matching and valid report files.
+The number of tests (total, failed and skipped) will be extracted from
+top-level `<testsuite>` tags, from all matching and valid report files.
 
 ➡️ `{repo}-[{ref}-]junit-tests.json`
 

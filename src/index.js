@@ -9,6 +9,7 @@ export async function main() {
       .map(b => buildBadge(b));
     await gist.update(badges);
   } catch (error) {
-    core.warning(`An error occurred: ${error.message}`);
+    const msg = error instanceof Error ? error.message : error;
+    core.warning(`An error occurred: ${msg}`);
   }
 }

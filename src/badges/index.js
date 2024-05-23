@@ -3,20 +3,15 @@ import * as tests from './tests.js';
 import * as coverage from './coverage.js';
 
 /**
- * @typedef {{schemaVersion?: number, label?: string, message?: string, color?: string}} Badge A generated badge
- * @typedef {(data: any) => Badge} BadgeGenerator A badge generator
- */
-
-/**
  * Available badge generators
- * @type {{[key: string]: {buildBadge: BadgeGenerator}}}
+ * @type {{ [key: string]: { buildBadge: BadgeGenerator } }}
  */
 const generators = { tests, coverage };
 
 /**
  * Build a badge file from a report.
- * @param {import('../reports/index.js').Report} report Input report
- * @returns {{name: string, content: Badge}} Badge file name and content
+ * @param {Report} report Input report
+ * @returns {NamedBadge} Badge name and content
  */
 export function buildBadge(report) {
   let name = `${report.format}-${report.type}.json`;
@@ -32,10 +27,10 @@ export function buildBadge(report) {
     name = `${prefix}-${name}`;
   }
   core.info(`Build badge ${name}`);
-  const content = {
+  const badge = {
     schemaVersion: 1,
     label: report.type,
     ...generators[report.type].buildBadge(report.data)
   };
-  return { name, content };
+  return { name, badge };
 }

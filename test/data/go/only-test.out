@@ -1,0 +1,5 @@
+=== RUN   Test
+=== RUN   Test/example/1
+--- PASS: Test (0.01s)
+    --- PASS: Test/example/1 (0.01s)
+PASS
