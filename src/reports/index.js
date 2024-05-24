@@ -5,19 +5,14 @@ import * as cobertura from './cobertura.js';
 import * as jacoco from './jacoco.js';
 
 /**
- * @typedef {{ type: string, format?: string, data: any }} Report A loaded report
- * @typedef {(root: string) => Promise<Report[]>} ReportsLoader A reports loader
- */
-
-/**
  * Available report loaders
- * @type {{[key: string]: {getReports: ReportsLoader}}}
+ * @type {{ [key: string]: { getReports: ReportsLoader } }}
  */
 const loaders = { go, junit, cobertura, jacoco };
 
 /**
  * Load all available reports in the current workspace.
- * @returns Loaded reports
+ * @returns {Promise<Report[]>} Loaded reports
  */
 export async function getReports() {
   core.info('Load reports');
@@ -25,7 +20,7 @@ export async function getReports() {
   for (const id of Object.keys(loaders)) {
     try {
       const reports = await loaders[id].getReports(process.cwd());
-      all.push(...reports.map(r => ({ format: id, ...r })));
+      all.push(...reports.map(r => ({ ...r, format: id })));
     } catch (error) {
       core.warning(`Skipping ${id} report format: ${error}`);
     }

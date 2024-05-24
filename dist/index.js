@@ -33476,12 +33476,12 @@ async function globNearest(patterns) {
 
 
 /**
- * Load reports using Go tests and coverage formats.
+ * Load reports using Go test and coverage formats.
  * @param {string} root Root search directory
- * @returns {Promise<import('./index.js').Report[]>} Go tests and coverage reports
+ * @returns Go test and coverage reports
  */
 async function getReports(root) {
-  core.info('Load Go tests and coverage report');
+  core.info('Load Go test and coverage report');
   const goMods = await globNearest([(0,external_path_.join)(root, '**/go.mod')]);
   if (goMods.length === 0) {
     core.info('go.mod file not found, skipping');
@@ -33489,28 +33489,30 @@ async function getReports(root) {
   }
   const dir = (0,external_path_.dirname)(goMods[0]);
   core.info(`Search Go reports in '${dir}'`);
-  const badges = [];
+  /** @type {Omit<TestReport | CoverageReport, 'format'>[]} */
+  const reports = [];
   const patterns = ['test*.out', 'test*.txt'].map(t => (0,external_path_.join)(dir, t));
-  const reports = await globNearest(patterns);
-  for (const r of reports) {
-    core.info(`Load Go report '${r}'`);
-    const report = await external_fs_.promises.readFile(r, { encoding: 'utf8' });
-    const tests = (report.match(/=== RUN/g) || []).length;
+  const files = await globNearest(patterns);
+  for (const f of files) {
+    core.info(`Load Go report '${f}'`);
+    const contents = await external_fs_.promises.readFile(f, { encoding: 'utf8' });
+    const tests = (contents.match(/=== RUN/g) || []).length;
     if (tests === 0) {
       continue; // Invalid report file, trying the next one
     }
-    const passed = (report.match(/--- PASS/g) || []).length;
-    const failed = (report.match(/--- FAIL/g) || []).length;
-    badges.push({ type: 'tests', data: { passed, failed, tests } });
-    const percentages = report.match(/(?<=\s)[0-9.]+(?=%)/g);
+    const passed = (contents.match(/--- PASS/g) || []).length;
+    const failed = (contents.match(/--- FAIL/g) || []).length;
+    const skipped = (contents.match(/--- SKIP/g) || []).length;
+    reports.push({ type: 'tests', data: { tests, passed, failed, skipped } });
+    const percentages = contents.match(/(?<=\s)[0-9.]+(?=%)/g);
     if (percentages && percentages.length >= 1) {
       const coverage = parseFloat(percentages.slice(-1)[0]);
-      badges.push({ type: 'coverage', data: { coverage } });
+      reports.push({ type: 'coverage', data: { coverage } });
     }
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${badges.length} Go report(s)`);
-  return badges;
+  core.info(`Loaded ${reports.length} Go report(s)`);
+  return reports;
 }
 
 ;// CONCATENATED MODULE: ./src/reports/junit.js
@@ -33520,38 +33522,39 @@ async function getReports(root) {
 
 
 /**
- * Load tests reports using JUnit format.
+ * Load test reports using JUnit format.
  * @param {string} root Root search directory
- * @returns {Promise<import('./index.js').Report[]>} JUnit tests report
+ * @returns {Promise<Omit<TestReport, 'format'>[]>} JUnit test report
  */
 async function junit_getReports(root) {
-  core.info('Load JUnit tests report');
+  core.info('Load JUnit test report');
   const patterns = [
     (0,external_path_.join)(root, '**/TEST-*.xml'),
     (0,external_path_.join)(root, '**/report.xml'),
     (0,external_path_.join)(root, '**/*test*.xml'),
     (0,external_path_.join)(root, '**/*junit*.xml')
   ];
-  const reports = await globNearest(patterns);
-  const data = { passed: 0, failed: 0, tests: 0 };
+  const files = await globNearest(patterns);
+  const data = { tests: 0, passed: 0, failed: 0, skipped: 0 };
   let count = 0;
-  for (const r of reports) {
-    core.info(`Load JUnit report '${r}'`);
-    const testSuites = await getTestSuiteTags(r);
+  for (const f of files) {
+    core.info(`Load JUnit report '${f}'`);
+    const testSuites = await getTestSuiteTags(f);
     if (testSuites.length === 0) {
       core.info('Report is not a valid JUnit report');
       continue; // Invalid report file, trying the next one
     }
     for (const ts of testSuites) {
+      data.tests += parseInt(ts.match(/tests="([0-9]+)"/)?.[1] ?? '0');
       data.failed += parseInt(ts.match(/failures="([0-9]+)"/)?.[1] ?? '0');
       data.failed += parseInt(ts.match(/errors="([0-9]+)"/)?.[1] ?? '0');
-      data.tests += parseInt(ts.match(/tests="([0-9]+)"/)?.[1] ?? '0');
+      data.skipped += parseInt(ts.match(/skipped="([0-9]+)"/)?.[1] ?? '0');
     }
     count++;
   }
-  data.passed = data.tests - data.failed;
+  data.passed = data.tests - (data.failed + data.skipped);
   core.info(`Loaded ${count} JUnit report(s)`);
-  return [{ type: 'tests', data }];
+  return count > 0 ? [{ type: 'tests', data }] : [];
 }
 
 /**
@@ -33565,8 +33568,8 @@ async function junit_getReports(root) {
 async function getTestSuiteTags(path) {
   const testSuites = [];
   let depth = 0;
-  const report = await external_fs_.promises.readFile(path, { encoding: 'utf8' });
-  const tags = report.match(/<\/?testsuite(?:[^s>][^>]+|\s*)>/g) ?? [];
+  const contents = await external_fs_.promises.readFile(path, { encoding: 'utf8' });
+  const tags = contents.match(/<\/?testsuite(?:[^s>][^>]+|\s*)>/g) ?? [];
   for (const tag of tags) {
     if (tag.startsWith('</')) {
       depth--;
@@ -33597,23 +33600,24 @@ async function cobertura_getReports(root) {
     (0,external_path_.join)(root, '**/*cobertura*.xml'),
     (0,external_path_.join)(root, '**/*coverage*.xml')
   ];
-  const reports = await globNearest(patterns);
-  const badges = [];
-  for (const r of reports) {
-    core.info(`Load Cobertura report '${r}'`);
-    const report = await external_fs_.promises.readFile(r, { encoding: 'utf8' });
-    const coverageMatches = report
+  const files = await globNearest(patterns);
+  /** @type {Omit<CoverageReport, 'format'>[]} */
+  const reports = [];
+  for (const f of files) {
+    core.info(`Load Cobertura report '${f}'`);
+    const contents = await external_fs_.promises.readFile(f, { encoding: 'utf8' });
+    const coverageMatches = contents
       .match(/(?<=<coverage[^>]+line-rate=")[0-9.]+(?=")/);
     if (coverageMatches?.length !== 1) {
       core.info('Report is not a valid Cobertura report');
       continue; // Invalid report file, trying the next one
     }
     const coverage = parseFloat(coverageMatches[0]) * 100;
-    badges.push({ type: 'coverage', data: { coverage } });
+    reports.push({ type: 'coverage', data: { coverage } });
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${badges.length} Cobertura report(s)`);
-  return badges;
+  core.info(`Loaded ${reports.length} Cobertura report(s)`);
+  return reports;
 }
 
 ;// CONCATENATED MODULE: ./src/reports/jacoco.js
@@ -33625,7 +33629,7 @@ async function cobertura_getReports(root) {
 /**
  * Load coverage reports using JaCoCo format.
  * @param {string} root Root search directory
- * @returns {Promise<import('./index.js').Report[]>} JaCoCo coverage report
+ * @returns JaCoCo coverage report
  */
 async function jacoco_getReports(root) {
   core.info('Load JaCoCo coverage report');
@@ -33633,14 +33637,15 @@ async function jacoco_getReports(root) {
     (0,external_path_.join)(root, '**/*jacoco*.xml'),
     (0,external_path_.join)(root, '**/*coverage*.xml')
   ];
-  const reports = await globNearest(patterns);
-  const badges = [];
-  for (const r of reports) {
-    core.info(`Load JaCoCo report '${r}'`);
-    const report = await external_fs_.promises.readFile(r, { encoding: 'utf8' });
-    const missedMatches = report
+  const files = await globNearest(patterns);
+  /** @type {Omit<CoverageReport, 'format'>[]} */
+  const reports = [];
+  for (const f of files) {
+    core.info(`Load JaCoCo report '${f}'`);
+    const contents = await external_fs_.promises.readFile(f, { encoding: 'utf8' });
+    const missedMatches = contents
       .match(/(?<=<counter[^>]+type="LINE"[^>]+missed=")[0-9.]+(?=")/);
-    const coveredMatches = report
+    const coveredMatches = contents
       .match(/(?<=<counter[^>]+type="LINE"[^>]+covered=")[0-9.]+(?=")/);
     if (!missedMatches?.length || !coveredMatches?.length) {
       core.info('Report is not a valid JaCoCo report');
@@ -33649,11 +33654,11 @@ async function jacoco_getReports(root) {
     const missed = parseInt(missedMatches.slice(-1)[0]);
     const covered = parseInt(coveredMatches.slice(-1)[0]);
     const coverage = covered * 100 / (covered + missed);
-    badges.push({ type: 'coverage', data: { coverage } });
+    reports.push({ type: 'coverage', data: { coverage } });
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${badges.length} JaCoCo report(s)`);
-  return badges;
+  core.info(`Loaded ${reports.length} JaCoCo report(s)`);
+  return reports;
 }
 
 ;// CONCATENATED MODULE: ./src/reports/index.js
@@ -33664,19 +33669,14 @@ async function jacoco_getReports(root) {
 
 
 /**
- * @typedef {{ type: string, format?: string, data: any }} Report A loaded report
- * @typedef {(root: string) => Promise<Report[]>} ReportsLoader A reports loader
- */
-
-/**
  * Available report loaders
- * @type {{[key: string]: {getReports: ReportsLoader}}}
+ * @type {{ [key: string]: { getReports: ReportsLoader } }}
  */
 const loaders = { go: go_namespaceObject, junit: junit_namespaceObject, cobertura: cobertura_namespaceObject, jacoco: jacoco_namespaceObject };
 
 /**
  * Load all available reports in the current workspace.
- * @returns Loaded reports
+ * @returns {Promise<Report[]>} Loaded reports
  */
 async function reports_getReports() {
   core.info('Load reports');
@@ -33684,7 +33684,7 @@ async function reports_getReports() {
   for (const id of Object.keys(loaders)) {
     try {
       const reports = await loaders[id].getReports(process.cwd());
-      all.push(...reports.map(r => ({ format: id, ...r })));
+      all.push(...reports.map(r => ({ ...r, format: id })));
     } catch (error) {
       core.warning(`Skipping ${id} report format: ${error}`);
     }
@@ -33696,24 +33696,28 @@ async function reports_getReports() {
 ;// CONCATENATED MODULE: ./src/badges/tests.js
 /**
  * Build a tests badge.
- * @param {*} data Badge data
- * @returns {import('./index.js').Badge} Badge content
+ * @param {TestReportData} data Test report data
+ * @returns {BadgeContent} Badge content
  */
 function buildBadge(data) {
   const content = {};
   content.message = `${data.passed} passed`;
+  content.color = data.passed > 0 ? 'brightgreen' : 'lightgrey';
   if (data.failed > 0) {
     content.message += `, ${data.failed} failed`;
+    content.color = 'red';
   }
-  content.color = data.failed === 0 ? 'brightgreen' : 'red';
+  if (data.skipped > 0) {
+    content.message += `, ${data.skipped} skipped`;
+  }
   return content;
 }
 
 ;// CONCATENATED MODULE: ./src/badges/coverage.js
 /**
  * Build a coverage badge.
- * @param {*} data Badge data
- * @returns {import('./index.js').Badge} Badge content
+ * @param {CoverageReportData} data Coverage report data
+ * @returns {BadgeContent} Badge content
  */
 function coverage_buildBadge(data) {
   const content = {};
@@ -33740,20 +33744,15 @@ function coverage_buildBadge(data) {
 
 
 /**
- * @typedef {{schemaVersion?: number, label?: string, message?: string, color?: string}} Badge A generated badge
- * @typedef {(data: any) => Badge} BadgeGenerator A badge generator
- */
-
-/**
  * Available badge generators
- * @type {{[key: string]: {buildBadge: BadgeGenerator}}}
+ * @type {{ [key: string]: { buildBadge: BadgeGenerator } }}
  */
 const generators = { tests: tests_namespaceObject, coverage: coverage_namespaceObject };
 
 /**
  * Build a badge file from a report.
- * @param {import('../reports/index.js').Report} report Input report
- * @returns {{name: string, content: Badge}} Badge file name and content
+ * @param {Report} report Input report
+ * @returns {NamedBadge} Badge name and content
  */
 function badges_buildBadge(report) {
   let name = `${report.format}-${report.type}.json`;
@@ -33769,12 +33768,12 @@ function badges_buildBadge(report) {
     name = `${prefix}-${name}`;
   }
   core.info(`Build badge ${name}`);
-  const content = {
+  const badge = {
     schemaVersion: 1,
     label: report.type,
     ...generators[report.type].buildBadge(report.data)
   };
-  return { name, content };
+  return { name, badge };
 }
 
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
@@ -33785,16 +33784,14 @@ var github = __nccwpck_require__(5438);
 
 /**
  * Update the Gist.
- * @param {{name: string, content: import('../badges/index.js').Badge}[]} badges Badges to add to the Gist
+ * @param {NamedBadge[]} badges Badges to add to the Gist
  */
 async function update(badges) {
   core.info(`Update Gist with ${badges.length} file(s)`);
   const octokit = github.getOctokit(core.getInput('token'));
-  const files = badges
-    .reduce((result, b) => {
-      result[b.name] = { content: JSON.stringify(b.content) };
-      return result;
-    }, {});
+  const files = Object.fromEntries(
+    badges.map((b) => [b.name, { content: JSON.stringify(b.badge) }])
+  );
   await octokit.rest.gists.update({
     gist_id: core.getInput('gist-id'),
     files
@@ -33813,7 +33810,8 @@ async function main() {
       .map(b => badges_buildBadge(b));
     await update(badges);
   } catch (error) {
-    core.warning(`An error occurred: ${error.message}`);
+    const msg = error instanceof Error ? error.message : error;
+    core.warning(`An error occurred: ${msg}`);
   }
 }
 

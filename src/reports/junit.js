@@ -4,38 +4,39 @@ import { join } from 'path';
 import { globNearest } from '../util/index.js';
 
 /**
- * Load tests reports using JUnit format.
+ * Load test reports using JUnit format.
  * @param {string} root Root search directory
- * @returns {Promise<import('./index.js').Report[]>} JUnit tests report
+ * @returns {Promise<Omit<TestReport, 'format'>[]>} JUnit test report
  */
 export async function getReports(root) {
-  core.info('Load JUnit tests report');
+  core.info('Load JUnit test report');
   const patterns = [
     join(root, '**/TEST-*.xml'),
     join(root, '**/report.xml'),
     join(root, '**/*test*.xml'),
     join(root, '**/*junit*.xml')
   ];
-  const reports = await globNearest(patterns);
-  const data = { passed: 0, failed: 0, tests: 0 };
+  const files = await globNearest(patterns);
+  const data = { tests: 0, passed: 0, failed: 0, skipped: 0 };
   let count = 0;
-  for (const r of reports) {
-    core.info(`Load JUnit report '${r}'`);
-    const testSuites = await getTestSuiteTags(r);
+  for (const f of files) {
+    core.info(`Load JUnit report '${f}'`);
+    const testSuites = await getTestSuiteTags(f);
     if (testSuites.length === 0) {
       core.info('Report is not a valid JUnit report');
       continue; // Invalid report file, trying the next one
     }
     for (const ts of testSuites) {
+      data.tests += parseInt(ts.match(/tests="([0-9]+)"/)?.[1] ?? '0');
       data.failed += parseInt(ts.match(/failures="([0-9]+)"/)?.[1] ?? '0');
       data.failed += parseInt(ts.match(/errors="([0-9]+)"/)?.[1] ?? '0');
-      data.tests += parseInt(ts.match(/tests="([0-9]+)"/)?.[1] ?? '0');
+      data.skipped += parseInt(ts.match(/skipped="([0-9]+)"/)?.[1] ?? '0');
     }
     count++;
   }
-  data.passed = data.tests - data.failed;
+  data.passed = data.tests - (data.failed + data.skipped);
   core.info(`Loaded ${count} JUnit report(s)`);
-  return [{ type: 'tests', data }];
+  return count > 0 ? [{ type: 'tests', data }] : [];
 }
 
 /**
@@ -49,8 +50,8 @@ export async function getReports(root) {
 async function getTestSuiteTags(path) {
   const testSuites = [];
   let depth = 0;
-  const report = await fs.readFile(path, { encoding: 'utf8' });
-  const tags = report.match(/<\/?testsuite(?:[^s>][^>]+|\s*)>/g) ?? [];
+  const contents = await fs.readFile(path, { encoding: 'utf8' });
+  const tags = contents.match(/<\/?testsuite(?:[^s>][^>]+|\s*)>/g) ?? [];
   for (const tag of tags) {
     if (tag.startsWith('</')) {
       depth--;

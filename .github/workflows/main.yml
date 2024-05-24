@@ -19,10 +19,11 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run lint
-      - run: npm run build
       - run: npm run test:ci
         env:
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+      - run: npm run build
+      - run: sed -i '0,/index.js/s//dist\/index.js/' action.yml package.json
       - run: rm -rf test/data
       - uses: ./
         with:

@@ -43,7 +43,7 @@ describe('badges/index', () => {
         const actual = buildBadge({ type: 'coverage', format: 'go', data: { coverage: 0 } });
         assert.deepEqual(actual, {
           name: expected.name,
-          content: { schemaVersion: 1, label: 'coverage', message: '0%', color: 'red' }
+          badge: { schemaVersion: 1, label: 'coverage', message: '0%', color: 'red' }
         });
       });
     }

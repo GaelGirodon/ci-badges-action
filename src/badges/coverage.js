@@ -1,7 +1,7 @@
 /**
  * Build a coverage badge.
- * @param {*} data Badge data
- * @returns {import('./index.js').Badge} Badge content
+ * @param {CoverageReportData} data Coverage report data
+ * @returns {BadgeContent} Badge content
  */
 export function buildBadge(data) {
   const content = {};
