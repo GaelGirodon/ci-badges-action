@@ -6,8 +6,8 @@
 ![tests](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Fci-badges-action-junit-tests.json)
 ![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Fci-badges-action-cobertura-coverage.json)
 
-This action generates badges (as JSON files) from Go, JUnit, Cobertura and
-JaCoCo test and coverage reports (most test runners and code coverage tools,
+This action generates badges (as JSON files) from Go, JUnit, Cobertura, JaCoCo
+and LCOV test and coverage reports (most test runners and code coverage tools,
 including Mocha, Jest, PHPUnit, c8, Istanbul/nyc, and more, support at least
 one of these formats) and upload them to a Gist to make them available to
 Shields through the endpoint feature with (almost) zero configuration.
@@ -69,6 +69,7 @@ from test report(s).
 ![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Frepo-go-coverage.json)
 ![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Frepo-cobertura-coverage.json)
 ![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Frepo-jacoco-coverage.json)
+![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Frepo-lcov-coverage.json)
 
 This badge displays the percentage of covered lines extracted from a coverage
 report.
@@ -156,6 +157,24 @@ The coverage will be extracted from the last `<counter>` tag with type `LINE`,
 from the first matching and valid report file.
 
 ➡️ `{repo}-[{ref}-]jacoco-coverage.json`
+
+### LCOV
+
+Write the coverage report to a file matching:
+
+- `**/lcov.*`
+- `**/*.lcov`
+
+This is the default format and location with LCOV, but some code coverage
+tools support this format too, natively or using an additional reporter:
+
+- **c8**: `c8 --reporter lcov [...]` → `coverage/lcov.info`
+- **Deno**: `deno test --coverage=cov_profile && deno coverage cov_profile --lcov --output=cov_profile.lcov`
+
+The coverage will be computed using `LF` and `LH` keys, from the first
+matching and valid report file.
+
+➡️ `{repo}-[{ref}-]lcov-coverage.json`
 
 ## Notes
 

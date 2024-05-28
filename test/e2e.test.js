@@ -32,7 +32,8 @@ describe('CI Badges action', function () {
         'repo-go-coverage.json',
         'repo-go-tests.json',
         'repo-jacoco-coverage.json',
-        'repo-junit-tests.json'
+        'repo-junit-tests.json',
+        'repo-lcov-coverage.json'
       ].forEach(f => assert.ok(files.includes(f)));
     });
   });
