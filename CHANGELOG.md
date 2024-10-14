@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.6.0 - 2024-10-14
+
+- Add support for LCOV report format
+- Update dependencies
+
 ## 1.5.0 - 2024-05-25
 
 - Report skipped tests

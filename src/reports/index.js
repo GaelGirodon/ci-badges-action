@@ -3,12 +3,13 @@ import * as go from './go.js';
 import * as junit from './junit.js';
 import * as cobertura from './cobertura.js';
 import * as jacoco from './jacoco.js';
+import * as lcov from './lcov.js';
 
 /**
  * Available report loaders
  * @type {{ [key: string]: { getReports: ReportsLoader } }}
  */
-const loaders = { go, junit, cobertura, jacoco };
+const loaders = { go, junit, cobertura, jacoco, lcov };
 
 /**
  * Load all available reports in the current workspace.
