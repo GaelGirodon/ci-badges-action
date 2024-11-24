@@ -21,9 +21,9 @@ export async function getReports(root) {
     core.info(`Load JaCoCo report '${f}'`);
     const contents = await fs.readFile(f, { encoding: 'utf8' });
     const missedMatches = contents
-      .match(/(?<=<counter[^>]+type="LINE"[^>]+missed=")[0-9.]+(?=")/);
+      .match(/(?<=<counter[^>]+type="LINE"[^>]+missed=")[0-9.]+(?=")/g);
     const coveredMatches = contents
-      .match(/(?<=<counter[^>]+type="LINE"[^>]+covered=")[0-9.]+(?=")/);
+      .match(/(?<=<counter[^>]+type="LINE"[^>]+covered=")[0-9.]+(?=")/g);
     if (!missedMatches?.length || !coveredMatches?.length) {
       core.info('Report is not a valid JaCoCo report');
       continue; // Invalid report file, trying the next one
