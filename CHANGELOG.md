@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.7.0 - 2024-11-30
+
+- Fix (and improve) JaCoCo reports loading
+- Update dependencies
+
 ## 1.6.0 - 2024-10-14
 
 - Add support for LCOV report format

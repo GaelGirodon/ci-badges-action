@@ -20,16 +20,14 @@ export async function getReports(root) {
   for (const f of files) {
     core.info(`Load JaCoCo report '${f}'`);
     const contents = await fs.readFile(f, { encoding: 'utf8' });
-    const missedMatches = contents
-      .match(/(?<=<counter[^>]+type="LINE"[^>]+missed=")[0-9.]+(?=")/);
-    const coveredMatches = contents
-      .match(/(?<=<counter[^>]+type="LINE"[^>]+covered=")[0-9.]+(?=")/);
-    if (!missedMatches?.length || !coveredMatches?.length) {
+    const counter = contents.slice(-400)
+      .match(/<counter[^>]+type="LINE"[^>]+>/g)?.at(-1);
+    const missed = parseInt(counter?.match(/missed="([0-9.]+)"/)?.[1]);
+    const covered = parseInt(counter?.match(/covered="([0-9.]+)"/)?.[1]);
+    if (isNaN(missed) || isNaN(covered)) {
       core.info('Report is not a valid JaCoCo report');
       continue; // Invalid report file, trying the next one
     }
-    const missed = parseInt(missedMatches.slice(-1)[0]);
-    const covered = parseInt(coveredMatches.slice(-1)[0]);
     const coverage = covered * 100 / (covered + missed);
     reports.push({ type: 'coverage', data: { coverage } });
     break; // Successfully loaded a report file, can return now
