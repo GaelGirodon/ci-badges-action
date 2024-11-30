@@ -36,10 +36,10 @@
     "@actions/glob": "^0.5.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.14.0",
-    "@vercel/ncc": "^0.38.2",
+    "@eslint/js": "^9.16.0",
+    "@vercel/ncc": "^0.38.3",
     "c8": "^10.1.2",
-    "eslint": "^9.14.0",
+    "eslint": "^9.16.0",
     "globals": "^15.12.0",
     "mocha": "^10.8.2",
     "mocha-junit-reporter": "^2.2.1"

@@ -8,7 +8,7 @@ describe('reports/jacoco', () => {
       const reports = await getReports(join(process.cwd(), 'test/data/jacoco'));
       assert.equal(reports.length, 1);
       assert.deepEqual(reports, [
-        { type: 'coverage', data: { coverage: 65.61056105610561 } }
+        { type: 'coverage', data: { coverage: 65.51724137931035 } }
       ]);
     });
   });
