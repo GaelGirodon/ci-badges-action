@@ -176,6 +176,25 @@ matching and valid report file.
 
 ➡️ `{repo}-[{ref}-]lcov-coverage.json`
 
+### Mutation
+
+Write the mutation report to a file matching:
+
+- `**/mutations.xml`
+- `**/mutation.json`
+
+This is the default format and location with Cobertura, but most code coverage
+tools support this format too, natively or using an additional reporter:
+
+- **Maven**: `mvn org.pitest:pitest-maven:mutationCoverage` → `target/pit-reports/mutations.xml`
+- **Stryker with Npm**: `stryker run stryker.conf.json` → `reports/mutation/mutation.json`
+
+
+The mutation will be extracted from the `status` attribute of the
+`<mutation>` tag from xml file or `status` attribute from json file.
+
+➡️ `{repo}-[{ref}-]mutation-mutation.json`
+
 ## Notes
 
 Storing badge JSON files on a Gist may seem tedious, but:
