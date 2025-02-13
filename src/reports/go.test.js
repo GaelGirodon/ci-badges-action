@@ -1,6 +1,6 @@
-import assert from 'assert/strict';
-import { copyFile, mkdir, rm, writeFile } from 'fs/promises';
-import { join } from 'path';
+import assert from 'node:assert/strict';
+import { copyFile, mkdir, rm, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { getReports } from './go.js';
 
 describe('reports/go', () => {

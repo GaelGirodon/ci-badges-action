@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import assert from 'node:assert/strict';
 import { buildBadge } from './tests.js';
 
 describe('badges/tests', () => {

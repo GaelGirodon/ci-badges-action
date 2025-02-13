@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
-import { promises as fs } from 'fs';
-import { join } from 'path';
+import fs from 'node:fs/promises';
+import { join } from 'node:path';
 import { globNearest } from '../util/index.js';
 
 /**
