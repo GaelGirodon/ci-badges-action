@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd"
+           version="3.0.2" name="Suite2Tests" time="0.008" tests="3" errors="0" skipped="1" failures="1">
+  <testcase name="case21" classname="Suite2Tests" time="0.002"/>
+  <testcase name="case22" classname="Suite2Tests" time="0.003">
+    <failure message="..." type="org.opentest4j.AssertionFailedError"/>
+  </testcase>
+  <testcase name="case23" classname="Suite2Tests" time="0.0">
+    <skipped message="skipped"/>
+  </testcase>
+</testsuite>
