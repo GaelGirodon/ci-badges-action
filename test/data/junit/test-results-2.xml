@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="More suites" tests="2" failures="0" errors="0" skipped="0" time="0.398">
-  <testsuite name="Suite 4" tests="2" failures="0" errors="0" skipped="0" time="0.397">
-    <testsuite name="Nested suite 4.1" tests="2" failures="0" errors="0" skipped="0" time="0.397">
-      <testcase name="Case 4.1.1" time="0.192"></testcase>
-      <testcase name="Case 4.1.2" time="0.204"></testcase>
-    </testsuite>
-  </testsuite>
-</testsuites>
