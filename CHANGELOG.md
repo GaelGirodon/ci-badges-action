@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.8.0 - 2025-03-23
+
+- Fix (and improve) JUnit reports loading
+- Update dependencies
+
 ## 1.7.0 - 2024-11-30
 
 - Fix (and improve) JaCoCo reports loading
