@@ -27,5 +27,6 @@ export async function getReports() {
     }
   }
   core.info(`Loaded ${all.length} report(s)`);
+  core.debug(JSON.stringify(all));
   return all;
 }

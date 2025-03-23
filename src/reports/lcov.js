@@ -27,7 +27,7 @@ export async function getReports(root) {
     reports.push({ type: 'coverage', data: { coverage } });
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${reports.length} LCOV report(s)`);
+  core.info(`Loaded ${reports.length} LCOV report(s): ${JSON.stringify(reports)}`);
   return reports;
 }
 

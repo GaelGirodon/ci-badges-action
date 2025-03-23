@@ -30,6 +30,6 @@ export async function getReports(root) {
     reports.push({ type: 'coverage', data: { coverage } });
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${reports.length} Cobertura report(s)`);
+  core.info(`Loaded ${reports.length} Cobertura report(s): ${JSON.stringify(reports)}`);
   return reports;
 }
