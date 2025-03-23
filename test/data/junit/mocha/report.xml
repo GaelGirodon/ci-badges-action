@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.016" tests="15" failures="5" skipped="3">
+  <testsuite name="Root Suite" timestamp="2025-03-18T21:21:18" tests="0" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Mocha JUnit test suite 1" timestamp="2025-03-18T21:21:18" tests="6" file="mocha.js" time="0.000" failures="2">
+    <testcase name="Mocha JUnit test suite 1 Case 1.1" time="0.001" classname="Case 1.1">
+    </testcase>
+    <testcase name="Mocha JUnit test suite 1 Case 1.2" time="0.000" classname="Case 1.2">
+    </testcase>
+    <testcase name="Mocha JUnit test suite 1 Case 1.4" time="0.000" classname="Case 1.4">
+    </testcase>
+    <testcase name="Mocha JUnit test suite 1 Case 1.5" time="0.008" classname="Case 1.5">
+      <failure message="..." type="AssertionError"/>
+    </testcase>
+    <testcase name="Mocha JUnit test suite 1 Case 1.6" time="0.000" classname="Case 1.6">
+      <failure message="..." type="AssertionError"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="Nested suite 1.3" timestamp="2025-03-18T21:21:18" tests="6" file="mocha.js" time="0.002" failures="2">
+    <testcase name="Mocha JUnit test suite 1 Nested suite 1.3 Case 1.3.1" time="0.000" classname="Case 1.3.1">
+    </testcase>
+    <testcase name="Mocha JUnit test suite 1 Nested suite 1.3 Case 1.3.2" time="0.000" classname="Case 1.3.2">
+    </testcase>
+    <testcase name="Mocha JUnit test suite 1 Nested suite 1.3 Case 1.3.3" time="0.000" classname="Case 1.3.3">
+    </testcase>
+    <testcase name="Mocha JUnit test suite 1 Nested suite 1.3 Case 1.3.4" time="0.001" classname="Case 1.3.4">
+      <failure message="..." type="AssertionError"/>
+    </testcase>
+    <testcase name="Mocha JUnit test suite 1 Nested suite 1.3 Case 1.3.5" time="0.000" classname="Case 1.3.5">
+      <failure message="..." type="AssertionError"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="Mocha JUnit test suite 2" timestamp="2025-03-18T21:21:18" tests="3" file="mocha.js" time="0.001" failures="1">
+    <testcase name="Mocha JUnit test suite 2 Case 2.1" time="0.000" classname="Case 2.1">
+    </testcase>
+    <testcase name="Mocha JUnit test suite 2 Case 2.2" time="0.001" classname="Case 2.2">
+      <failure message="..." type="AssertionError"/>
+    </testcase>
+  </testsuite>
+</testsuites>

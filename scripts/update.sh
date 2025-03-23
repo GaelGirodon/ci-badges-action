@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
-set -x
-trap read debug
+set -ex && trap read debug
 
 npx npm-check-updates -u
 npm install

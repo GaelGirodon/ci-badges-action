@@ -108,8 +108,8 @@ Write test report(s) to file(s) matching:
 - `**/*test*.xml`
 - `**/*junit*.xml`
 
-This is the default format and location with JUnit, but most test runners
-support this format too, natively or using an additional reporter:
+This is the default format with JUnit, but most test runners support
+this format too, natively or using an additional reporter:
 
 - **Maven**: `mvn test` → `target/{surefire,failsafe}-reports/TEST-*.xml`
 - **Gradle**: `gradle test` → `build/test-results/test/**/TEST-*.xml`
@@ -120,7 +120,8 @@ support this format too, natively or using an additional reporter:
 - **PHPUnit**: `phpunit --log-junit report.xml`
 
 The number of tests (total, failed and skipped) will be extracted from
-top-level `<testsuite>` tags, from all matching and valid report files.
+the root `<testsuites>` tags if possible, or by reading the `<testcase>`
+tags otherwise, from all matching and valid report files.
 
 ➡️ `{repo}-[{ref}-]junit-tests.json`
 
@@ -131,8 +132,8 @@ Write the coverage report to a file matching:
 - `**/*cobertura*.xml`
 - `**/*coverage*.xml`
 
-This is the default format and location with Cobertura, but most code coverage
-tools support this format too, natively or using an additional reporter:
+This is the default format with Cobertura, but most code coverage tools
+support this format too, natively or using an additional reporter:
 
 - **c8**: `c8 --reporter cobertura [...]` → `coverage/cobertura-coverage.xml`
 - **nyc**: `nyc --reporter cobertura [...]` → `coverage/cobertura-coverage.xml`
@@ -150,8 +151,8 @@ Write the coverage report to a file matching:
 - `**/*jacoco*.xml`
 - `**/*coverage*.xml`
 
-This is the default format and location with JaCoCo, but some code coverage
-tools may support this format too.
+This is the default format with JaCoCo, but some code coverage tools may
+support this format too.
 
 The coverage will be extracted from the last `<counter>` tag with type `LINE`,
 from the first matching and valid report file.
@@ -165,8 +166,8 @@ Write the coverage report to a file matching:
 - `**/lcov.*`
 - `**/*.lcov`
 
-This is the default format and location with LCOV, but some code coverage
-tools support this format too, natively or using an additional reporter:
+This is the default format with LCOV, but some code coverage tools
+support this format too, natively or using an additional reporter:
 
 - **c8**: `c8 --reporter lcov [...]` → `coverage/lcov.info`
 - **Deno**: `deno test --coverage=cov_profile && deno coverage cov_profile --lcov --output=cov_profile.lcov`

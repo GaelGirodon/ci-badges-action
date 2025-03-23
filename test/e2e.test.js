@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import assert from 'assert/strict';
+import assert from 'node:assert/strict';
 import { main } from '../src/index.js';
 
 describe('CI Badges action', function () {

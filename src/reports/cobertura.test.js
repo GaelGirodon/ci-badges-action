@@ -1,5 +1,5 @@
-import assert from 'assert/strict';
-import { join } from 'path';
+import assert from 'node:assert/strict';
+import { join } from 'node:path';
 import { getReports } from './cobertura.js';
 
 describe('reports/cobertura', () => {
