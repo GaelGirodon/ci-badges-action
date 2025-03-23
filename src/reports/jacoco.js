@@ -18,20 +18,20 @@ export async function getReports(root) {
   /** @type {Omit<CoverageReport, 'format'>[]} */
   const reports = [];
   for (const f of files) {
-    core.info(`Load JaCoCo report '${f}'`);
+    core.info(`Load JaCoCo report file '${f}'`);
     const contents = await fs.readFile(f, { encoding: 'utf8' });
     const counter = contents.slice(-400)
       .match(/<counter[^>]+type="LINE"[^>]+>/g)?.at(-1);
     const missed = parseInt(counter?.match(/missed="([0-9.]+)"/)?.[1]);
     const covered = parseInt(counter?.match(/covered="([0-9.]+)"/)?.[1]);
     if (isNaN(missed) || isNaN(covered)) {
-      core.info('Report is not a valid JaCoCo report');
+      core.info('File is not a valid JaCoCo report');
       continue; // Invalid report file, trying the next one
     }
     const coverage = covered * 100 / (covered + missed);
     reports.push({ type: 'coverage', data: { coverage } });
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${reports.length} JaCoCo report(s)`);
+  core.info(`Loaded ${reports.length} JaCoCo report(s): ${JSON.stringify(reports)}`);
   return reports;
 }

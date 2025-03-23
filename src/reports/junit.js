@@ -21,18 +21,20 @@ export async function getReports(root) {
   const data = { tests: 0, passed: 0, failed: 0, skipped: 0 };
   let count = 0;
   for (const f of files) {
-    core.info(`Load JUnit report '${f}'`);
+    core.info(`Load JUnit report file '${f}'`);
     const counters = await parseJUnitReport(f);
     if (!counters) {
-      core.info('Report is not a valid JUnit report');
+      core.info('File is not a valid JUnit report');
       continue; // Invalid report file, trying the next one
     }
     Object.keys(counters).forEach(k => data[k] += counters[k]);
+    core.info(`Loaded JUnit report file: ${JSON.stringify(counters)}`);
     count++;
   }
   data.passed = data.tests - (data.failed + data.skipped);
-  core.info(`Loaded ${count} JUnit report(s)`);
-  return count > 0 ? [{ type: 'tests', data }] : [];
+  const reports = count > 0 ? [{ type: 'tests', data }] : [];
+  core.info(`Loaded ${reports.length} JUnit report(s): ${JSON.stringify(reports)}`);
+  return reports;
 }
 
 /**

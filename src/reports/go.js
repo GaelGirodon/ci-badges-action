@@ -22,10 +22,11 @@ export async function getReports(root) {
   const patterns = ['test*.out', 'test*.txt'].map(t => join(dir, t));
   const files = await globNearest(patterns);
   for (const f of files) {
-    core.info(`Load Go report '${f}'`);
+    core.info(`Load Go report file '${f}'`);
     const contents = await fs.readFile(f, { encoding: 'utf8' });
     const tests = (contents.match(/=== RUN/g) || []).length;
     if (tests === 0) {
+      core.info('File is not a valid Go report');
       continue; // Invalid report file, trying the next one
     }
     const passed = (contents.match(/--- PASS/g) || []).length;
@@ -39,6 +40,6 @@ export async function getReports(root) {
     }
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${reports.length} Go report(s)`);
+  core.info(`Loaded ${reports.length} Go report(s): ${JSON.stringify(reports)}`);
   return reports;
 }
