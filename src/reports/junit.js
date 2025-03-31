@@ -97,9 +97,9 @@ function parseTestSuite(testSuite) {
   }
   for (let testCase of testSuite['testcase'] ?? []) {
     counters.tests += 1;
-    if (testCase['failure']) counters.failed++;
-    if (testCase['error']) counters.failed++;
-    if (testCase['skipped']) counters.skipped++;
+    if (Object.hasOwn(testCase, 'failure')) counters.failed++;
+    if (Object.hasOwn(testCase, 'error')) counters.failed++;
+    if (Object.hasOwn(testCase, 'skipped')) counters.skipped++;
   }
   return counters;
 }
