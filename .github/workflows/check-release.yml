@@ -2,8 +2,8 @@ name: check-release
 
 on:
   push:
-    branches:
-      - release
+    tags:
+      - v1
 
 env:
   GIST_ID: 715c62717519f634185af0ebde234992
