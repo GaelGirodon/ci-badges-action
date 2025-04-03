@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.9.0 - 2025-04-03
+
+- Fix JUnit reports loading
+- Improve logging
+- Update dependencies
+
 ## 1.8.0 - 2025-03-23
 
 - Fix (and improve) JUnit reports loading
