@@ -18,18 +18,18 @@ export async function getReports(root) {
   /** @type {Omit<CoverageReport, 'format'>[]} */
   const reports = [];
   for (const f of files) {
-    core.info(`Load Cobertura report '${f}'`);
+    core.info(`Load Cobertura report file '${f}'`);
     const contents = await fs.readFile(f, { encoding: 'utf8' });
     const coverageMatches = contents
       .match(/(?<=<coverage[^>]+line-rate=")[0-9.]+(?=")/);
     if (coverageMatches?.length !== 1) {
-      core.info('Report is not a valid Cobertura report');
+      core.info('File is not a valid Cobertura report');
       continue; // Invalid report file, trying the next one
     }
     const coverage = parseFloat(coverageMatches[0]) * 100;
     reports.push({ type: 'coverage', data: { coverage } });
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${reports.length} Cobertura report(s)`);
+  core.info(`Loaded ${reports.length} Cobertura report(s): ${JSON.stringify(reports)}`);
   return reports;
 }

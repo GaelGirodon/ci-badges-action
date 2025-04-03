@@ -18,16 +18,16 @@ export async function getReports(root) {
   /** @type {Omit<CoverageReport, 'format'>[]} */
   const reports = [];
   for (const f of files) {
-    core.info(`Load LCOV report '${f}'`);
+    core.info(`Load LCOV report file '${f}'`);
     const coverage = await getCoverage(f);
     if (coverage < 0) {
-      core.info('Report is not a valid LCOV report');
+      core.info('File is not a valid LCOV report');
       continue; // Invalid report file, trying the next one
     }
     reports.push({ type: 'coverage', data: { coverage } });
     break; // Successfully loaded a report file, can return now
   }
-  core.info(`Loaded ${reports.length} LCOV report(s)`);
+  core.info(`Loaded ${reports.length} LCOV report(s): ${JSON.stringify(reports)}`);
   return reports;
 }
 

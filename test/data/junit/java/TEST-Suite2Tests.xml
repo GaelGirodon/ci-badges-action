@@ -7,6 +7,6 @@
     <failure message="..." type="org.opentest4j.AssertionFailedError"/>
   </testcase>
   <testcase name="case23" classname="Suite2Tests" time="0.0">
-    <skipped message="skipped"/>
+    <skipped/>
   </testcase>
 </testsuite>
