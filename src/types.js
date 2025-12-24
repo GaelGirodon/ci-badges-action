@@ -8,9 +8,11 @@
  * @typedef {{ type: string, format: string, data: ReportData }} Report A loaded report
  * @typedef {{ type: 'tests', data: TestReportData } & Report} TestReport A loaded test report
  * @typedef {{ type: 'coverage', data: CoverageReportData } & Report} CoverageReport A loaded coverage report
+ * @typedef {{ type: 'mutation', data: MutationReportData } & Report} MutationReport A loaded mutation report
  * @typedef {{ [key: string]: number }} ReportData Report data
  * @typedef {{ tests?: number, passed: number, failed: number, skipped: number }} TestReportData Test report data
  * @typedef {{ coverage: number }} CoverageReportData Coverage report data
+ * @typedef {{ mutation: number }} MutationReportData Mutation report data
  * @typedef {(root: string) => Promise<Omit<Report, 'format'>[]>} ReportsLoader A report(s) loader
  */
 
