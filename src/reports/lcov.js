@@ -43,7 +43,7 @@ async function getCoverage(path) {
   const contents = await fs.readFile(path, { encoding: 'utf8' });
   /** @type {{ [sf: string]: { lh: number, lf: number } }} */
   const sourceFiles = {};
-  let from = 0, to = 0;
+  let from = 0, to;
   while ((to = contents.indexOf('end_of_record', from)) > 0) {
     const record = contents.slice(from, to);
     const sf = record.match(/^SF:(.+)$/m)?.[1] ?? '';

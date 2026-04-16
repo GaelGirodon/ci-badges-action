@@ -2,8 +2,8 @@ name: check-release
 
 on:
   push:
-    branches:
-      - release
+    tags:
+      - v1
 
 env:
   GIST_ID: 715c62717519f634185af0ebde234992
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: gaelgirodon/ci-badges-action@v1
         with:
           gist-id: ${{ env.GIST_ID }}
