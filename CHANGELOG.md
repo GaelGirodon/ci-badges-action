@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.10.0 - 2026-04-16
+
+- Upgrade runtime to node24
+- Update dependencies
+
 ## 1.9.0 - 2025-04-03
 
 - Fix JUnit reports loading
