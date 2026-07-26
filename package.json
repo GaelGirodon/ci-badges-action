@@ -31,18 +31,18 @@
   },
   "homepage": "https://github.com/GaelGirodon/ci-badges-action#readme",
   "dependencies": {
-    "@actions/core": "^3.0.0",
-    "@actions/github": "^9.1.0",
-    "@actions/glob": "^0.6.1",
-    "fast-xml-parser": "^5.5.12"
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1",
+    "@actions/glob": "^0.7.0",
+    "fast-xml-parser": "^5.10.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@vercel/ncc": "^0.38.4",
-    "c8": "^11.0.0",
-    "eslint": "^10.2.0",
-    "globals": "^17.5.0",
-    "mocha": "^11.7.5",
+    "@vercel/ncc": "^0.44.1",
+    "c8": "^12.0.0",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0",
+    "mocha": "^11.7.6",
     "mocha-junit-reporter": "^2.2.1"
   }
 }
