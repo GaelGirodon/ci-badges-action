@@ -1,12 +1,13 @@
 import * as core from '@actions/core';
 import * as tests from './tests.js';
 import * as coverage from './coverage.js';
+import * as mutation from './mutation.js';
 
 /**
  * Available badge generators
  * @type {{ [key: string]: { buildBadge: BadgeGenerator } }}
  */
-const generators = { tests, coverage };
+const generators = { tests, coverage, mutation };
 
 /**
  * Build a badge file from a report.
