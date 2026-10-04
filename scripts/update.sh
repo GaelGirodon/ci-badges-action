@@ -2,9 +2,9 @@
 
 set -ex && trap read debug
 
-npx npm-check-updates -u
+npx --min-release-age 7 npm-check-updates -u -c 3d
 npm install
-npm update
+npm update --min-release-age 3
 npm audit fix
 npm run lint
 npm run test
