@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "ncc build index.js",
-    "lint": "eslint src test *.js",
+    "lint": "oxlint --ignore-pattern types.js",
     "test": "node --test src/**/*.test.js",
     "test:e2e": "node --test test/**/*.test.js",
     "test:ci": "node --test --experimental-test-coverage --test-coverage-include=\"src/**/*.js\" --test-coverage-exclude=\"src/types.js\" --test-coverage-exclude=\"{src,test}/**/*.test.js\" --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-report.xml --test-reporter=lcov --test-reporter-destination=lcov.info \"{src,test}/**/*.test.js\""
@@ -37,9 +37,7 @@
     "fast-xml-parser": "^5.11.2"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@vercel/ncc": "^0.45.0",
-    "eslint": "^10.13.0",
-    "globals": "^17.13.0"
+    "oxlint": "^1.93.0"
   }
 }
