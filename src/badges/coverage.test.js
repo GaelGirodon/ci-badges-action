@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import { buildBadge } from './coverage.js';
 
 describe('badges/coverage', () => {

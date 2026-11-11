@@ -4,13 +4,13 @@
 ![license](https://img.shields.io/github/license/gaelgirodon/ci-badges-action?style=flat-square)
 ![build](https://img.shields.io/github/actions/workflow/status/gaelgirodon/ci-badges-action/main.yml?branch=main&style=flat-square)
 ![tests](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Fci-badges-action-junit-tests.json)
-![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Fci-badges-action-cobertura-coverage.json)
+![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2FGaelGirodon%2F715c62717519f634185af0ebde234992%2Fraw%2Fci-badges-action-lcov-coverage.json)
 
 This action generates badges (as JSON files) from Go, JUnit, Cobertura, JaCoCo
 and LCOV test and coverage reports (most test runners and code coverage tools,
-including Mocha, Jest, PHPUnit, c8, Istanbul/nyc, and more, support at least
-one of these formats) and upload them to a Gist to make them available to
-Shields through the endpoint feature with (almost) zero configuration.
+including Vitest, Mocha, Jest, PHPUnit, c8, Istanbul/nyc, and more, support at
+least one of these formats) and upload them to a Gist to make them available
+to Shields through the endpoint feature with (almost) zero configuration.
 
 ## Usage
 
@@ -114,6 +114,7 @@ this format too, natively or using an additional reporter:
 - **Maven**: `mvn test` → `target/{surefire,failsafe}-reports/TEST-*.xml`
 - **Gradle**: `gradle test` → `build/test-results/test/**/TEST-*.xml`
 - **Node.js**: `node --test --test-reporter=junit --test-reporter-destination=report.xml`
+- **Vitest**: `vitest --run --reporter=junit --outputFile=test-report.xml`
 - **Mocha**: `mocha --reporter mocha-junit-reporter` → `test-results.xml`
 - **Jest**: `jest --reporters="jest-junit"` → `junit.xml`
 - **Deno**: `deno test --junit-path=report.xml`
@@ -170,6 +171,7 @@ This is the default format with LCOV, but some code coverage tools
 support this format too, natively or using an additional reporter:
 
 - **c8**: `c8 --reporter lcov [...]` → `coverage/lcov.info`
+- **Vitest**: `vitest --run --coverage --coverage.reporter=lcov`
 - **Deno**: `deno test --coverage=cov_profile && deno coverage cov_profile --lcov --output=cov_profile.lcov`
 
 The coverage will be computed using `LF` and `LH` keys, from the first

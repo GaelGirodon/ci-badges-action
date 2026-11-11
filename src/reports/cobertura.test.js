@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
+import process from 'node:process';
+import { describe, it } from 'node:test';
 import { getReports } from './cobertura.js';
 
 describe('reports/cobertura', () => {
