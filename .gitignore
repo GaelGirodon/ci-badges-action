@@ -10,5 +10,5 @@
 # Project
 node_modules/
 dist/
-coverage/
-test-results.xml
+/lcov.info
+/test-report.xml

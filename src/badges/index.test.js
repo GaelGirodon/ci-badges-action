@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import process from 'node:process';
+import { after, describe, it } from 'node:test';
 import { buildBadge } from './index.js';
 
 describe('badges/index', () => {

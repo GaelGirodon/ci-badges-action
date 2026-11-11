@@ -8,9 +8,9 @@
   "scripts": {
     "build": "ncc build index.js",
     "lint": "eslint src test *.js",
-    "test": "mocha src",
-    "test:e2e": "mocha test",
-    "test:ci": "c8 -r cobertura --all --src src -x \"**/*.test.js\" -x \"**/types.js\" mocha -R mocha-junit-reporter src test || exit 0"
+    "test": "node --test src/**/*.test.js",
+    "test:e2e": "node --test test/**/*.test.js",
+    "test:ci": "node --test --experimental-test-coverage --test-coverage-include=\"src/**/*.js\" --test-coverage-exclude=\"src/types.js\" --test-coverage-exclude=\"{src,test}/**/*.test.js\" --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-report.xml --test-reporter=lcov --test-reporter-destination=lcov.info \"{src,test}/**/*.test.js\""
   },
   "repository": {
     "type": "git",
@@ -34,15 +34,12 @@
     "@actions/core": "^3.0.1",
     "@actions/github": "^9.1.1",
     "@actions/glob": "^0.7.0",
-    "fast-xml-parser": "^5.11.2"
+    "fast-xml-parser": "^5.12.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@vercel/ncc": "^0.45.0",
-    "c8": "^12.0.0",
-    "eslint": "^10.13.0",
-    "globals": "^17.13.0",
-    "mocha": "^12.0.3",
-    "mocha-junit-reporter": "^2.2.1"
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0"
   }
 }

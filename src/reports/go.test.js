@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { copyFile, mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import process from 'node:process';
+import { after, before, describe, it } from 'node:test';
 import { getReports } from './go.js';
 
 describe('reports/go', () => {

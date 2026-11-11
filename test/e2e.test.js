@@ -1,10 +1,11 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import assert from 'node:assert/strict';
+import process from 'node:process';
+import { describe, it } from 'node:test';
 import { main } from '../src/index.js';
 
-describe('CI Badges action', function () {
-  this.timeout(10000);
+describe('CI Badges action', { timeout: 10000 }, function () {
   describe('#main()', () => {
     it('should work end-to-end', async () => {
       // Set inputs
